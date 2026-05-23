@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mrinmay Mallik — Krishibid & Freelancer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-deep:   #13181a;
+      --green-mid:    #2d6a4f;
+      --green-light:  #52b788;
+      --gold:         #221727;
+      --cream:        #f8f3e8;
+      --text-dark:    #1a1a1a;
+      --text-muted:   #6b7280;
+      --white:        #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 6%;
+      background: rgba(248, 243, 232, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(45, 106, 79, 0.12);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.07); }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--green-deep);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.88rem; font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase;
+      position: relative; transition: color 0.25s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+      background: var(--green-light); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--green-deep); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--green-deep); transition: 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 6% 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 52%;
+      background: linear-gradient(145deg, var(--green-deep) 0%, var(--green-mid) 100%);
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%);
+      z-index: 0;
+    }
+    .hero-bg-leaf {
+      position: absolute; right: 3%; bottom: 5%; width: 340px; opacity: 0.08;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--green-light);
+      color: var(--green-mid); font-size: 0.78rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+    }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      line-height: 1.08; font-weight: 700;
+      color: var(--green-deep); margin-bottom: 0.6rem;
+    }
+    .hero-name em { color: var(--gold); font-style: italic; }
+    .hero-title {
+      font-size: 1.05rem; font-weight: 300; letter-spacing: 0.04em;
+      color: var(--green-mid); margin-bottom: 1.8rem;
+    }
+    .hero-desc {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.75;
+      max-width: 460px; margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--green-mid); color: var(--white);
+      padding: 0.85rem 2rem; border-radius: 6px;
+      text-decoration: none; font-weight: 500; font-size: 0.92rem;
+      border: none; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { background: var(--green-deep); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: var(--green-deep);
+      padding: 0.85rem 2rem; border-radius: 6px;
+      text-decoration: none; font-weight: 500; font-size: 0.92rem;
+      border: 2px solid var(--green-mid); cursor: pointer;
+      transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-outline:hover { background: var(--green-mid); color: white; transform: translateY(-2px); }
+
+    /* Hero photo right side */
+    .hero-photo-wrap {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .hero-photo-frame {
+      width: 300px; height: 380px;
+      position: relative;
+  
+    }
+    .hero-photo-frame::before {
+      content: '';
+      position: absolute; top: -14px; left: -12px;
+      width: 100%; height: 100%;
+      border: 2px solid var(--gold); border-radius: 12px;
+      z-index: 0;
+    }
+    .hero-photo-frame .photo-placeholder {
+      width: 100%; height: 100%; border-radius: 10px;
+      background: linear-gradient(160deg, #ffffff 0%, #ffffff 100%);
+      position: relative; z-index: 1; overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      padding-bottom: 1.5rem;
+     .photo-placeholder{
+    overflow: hidden;
+}
+    }
+    .photo-icon {
+      font-size: 5.5rem; line-height: 1; margin-bottom: 0.5rem;
+    }
+    .photo-upload-hint {
+      font-size: 0.78rem; color: hsla(216, 73%, 30%, 0.6);
+      text-align: center; line-height: 1.5; padding: 0 1rem;
+    }
+    /* If user adds actual img tag inside .photo-placeholder */
+    .hero-photo-frame .photo-placeholder img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-photo-label {
+      position: absolute; bottom: -20px; right: -18px; z-index: 2;
+      background: var(--gold); color: var(--white);
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em;
+      padding: 0.55rem 1.1rem; border-radius: 100px;
+      box-shadow: 0 4px 16px rgba(201,168,76,0.4);
+    }
+
+    /* ─── SECTION COMMON ─── */
+    section { padding: 6rem 6%; position: relative; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--green-light); font-weight: 500; margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      color: var(--green-deep); line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--green-light), var(--gold));
+      border-radius: 2px; margin-bottom: 2.5rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--white); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.5fr;
+      gap: 5rem; align-items: start;
+    }
+    .about-image-stack { position: relative; }
+    .about-main-img {
+      width: 100%; border-radius: 10px;
+      background: linear-gradient(160deg, #ffffff 0%, #f4f5f5 100%);
+      aspect-ratio: 4/5; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem;
+    }
+    .about-main-img img { width: 100%; height: 100%; object-fit: cover; }
+    .about-accent-card 
+    {
+      position: absolute; bottom: -2rem; right: -2rem;
+      background: var(--white); color: var(--white);
+      padding: 1.5rem 2rem; border-radius: 10px;
+      width: 210px;
+      box-shadow: 0 12px 40px rgba(63, 236, 10, 0.25);
+    }
+    .accent-card-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem; font-weight: 700; color: var(--gold);
+      line-height: 1;
+    }
+    .accent-card-text { font-size: 0.82rem; color: rgba(177, 46, 155, 0.7); margin-top: 0.3rem; }
+
+    .about-text p {
+      font-size: 1rem; line-height: 1.85; color: var(--text-muted);
+      margin-bottom: 1.4rem;
+    }
+    .about-highlights {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-top: 2rem;
+    }
+    .highlight-item {
+      padding: 1.2rem 1.4rem;
+      background: var(--cream); border-radius: 8px;
+      border-left: 3px solid var(--green-light);
+    }
+    .highlight-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .highlight-label { font-size: 0.8rem; font-weight: 500; color: var(--green-deep); text-transform: uppercase; letter-spacing: 0.06em; }
+    .highlight-val { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* ─── SKILLS ─── */
+    #skills { background: var(--cream); }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 0.5rem;
+    }
+    .skill-card {
+      background: var(--white); border-radius: 12px;
+      padding: 2rem; border: 1px solid rgba(224, 216, 208, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+    .skill-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px #a4aca81f; }
+    .skill-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .skill-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--green-deep); margin-bottom: 0.5rem; }
+    .skill-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    .skill-bar-wrap { margin-top: 1rem; height: 4px; background: rgba(45,106,79,0.1); border-radius: 2px; }
+    .skill-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--green-light), var(--gold)); }
+
+    /* ─── PHOTO GALLERY ─── */
+    #gallery { background: var(--green-deep); }
+    #gallery .section-label { color: var(--green-light); }
+    #gallery .section-title { color: var(--cream); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 1rem;
+    }
+    .gallery-item {
+      border-radius: 10px; overflow: hidden; position: relative;
+      aspect-ratio: 1; cursor: pointer;
+      background: rgba(245, 251, 253, 0.05);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item:first-child { grid-column: 1 / 3; grid-row: 1 / 3; aspect-ratio: auto; min-height: 350px; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-placeholder {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.5rem;
+      font-size: 2rem; color: rgba(255,255,255,0.2);
+      width: 100%; height: 100%; min-height: 140px;
+    }
+    .gallery-placeholder span { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,51,32,0.85) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: flex-end; padding: 1.2rem;
+      color: var(--cream); font-size: 0.85rem; font-weight: 500;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    /* ─── SERVICES ─── */
+    #services { background: var(--white); }
+    .services-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+    .service-card {
+      border: 1px solid rgba(45,106,79,0.12); border-radius: 12px; padding: 2.2rem;
+      position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s;
+    }
+    .service-card:hover { border-color: var(--green-light); transform: translateY(-4px); }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--green-light), var(--gold));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-num {
+      font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700;
+      color: rgba(45,106,79,0.08); line-height: 1; margin-bottom: 1rem;
+    }
+    .service-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green-deep); margin-bottom: 0.7rem; }
+    .service-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--cream); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; }
+    .contact-info p { font-size: 1rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem; }
+    .contact-detail {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem; background: var(--white); border-radius: 8px;
+      margin-bottom: 0.8rem; border: 1px solid rgba(45,106,79,0.1);
+    }
+    .contact-detail-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .contact-detail-text { font-size: 0.9rem; color: var(--green-deep); font-weight: 500; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-group label { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green-deep); display: block; margin-bottom: 0.4rem; }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; padding: 0.9rem 1.1rem;
+      border: 1.5px solid rgba(45,106,79,0.2); border-radius: 8px;
+      background: var(--white); font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; color: var(--text-dark);
+      transition: border-color 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px rgba(82,183,136,0.15);
+    }
+    .form-group textarea { min-height: 120px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    #form-status { font-size: 0.9rem; color: var(--green-mid); font-weight: 500; text-align: center; min-height: 1.4em; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--green-deep); color: rgba(255,255,255,0.6);
+      padding: 2.5rem 6%; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    footer .footer-brand {
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      color: var(--cream); font-weight: 700;
+    }
+    footer .footer-brand span { color: var(--gold); }
+    footer .footer-text { font-size: 0.82rem; }
+    .social-links { display: flex; gap: 1rem; }
+    .social-links a {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem;
+      transition: background 0.25s, color 0.25s;
+    }
+    .social-links a:hover { background: var(--green-light); color: white; }
+
+    /* ─── SCROLL TO TOP ─── */
+    #scrollTop {
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--green-mid); color: white;
+      border: none; cursor: pointer; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 4px 16px rgba(45,106,79,0.3); z-index: 99;
+    }
+    #scrollTop.visible { opacity: 1; transform: translateY(0); }
+    #scrollTop:hover { background: var(--green-deep); }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding-top: 7rem; }
+      .hero-bg { display: none; }
+      .hero-photo-wrap { margin-top: 3rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-accent-card { right: 0; }
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:first-child { grid-column: 1 / 3; }
+      .nav-links {
+        display: none; flex-direction: column; gap: 0;
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: var(--cream); padding: 1rem 6%;
+        border-bottom: 1px solid rgba(45,106,79,0.1);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { border-bottom: 1px solid rgba(45,106,79,0.07); }
+      .nav-links a { display: block; padding: 0.8rem 0; }
+      .hamburger { display: flex; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 4rem 5%; }
+      nav { padding: 1rem 5%; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: 1; }
+      .about-highlights { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav id="navbar">
+    <div class="nav-logo">M.<span>Mallik</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <div class="hero-bg">
+      <!-- Decorative leaf SVG -->
+      <svg class="hero-bg-leaf" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M200 480 C200 480 20 350 20 200 C20 80 120 20 200 20 C280 20 380 80 380 200 C380 350 200 480 200 480Z" fill="white"/>
+        <line x1="200" y1="480" x2="200" y2="20" stroke="white" stroke-width="3"/>
+        <line x1="200" y1="200" x2="80" y2="100" stroke="white" stroke-width="1.5"/>
+        <line x1="200" y1="280" x2="310" y2="180" stroke="white" stroke-width="1.5"/>
+        <line x1="200" y1="350" x2="100" y2="260" stroke="white" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🌿 Krishibid &amp; Freelancer</div>
+      <h1 class="hero-name">Mrinmay<br/><em>Mallik</em></h1>
+      <p class="hero-title">Agricultural Specialist · Digital Freelancer</p>
+      <p class="hero-desc">Bridging the gap between traditional agricultural wisdom and modern solutions — passionate about sustainable farming, agri-consulting, and creative freelance work.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn-primary">✉ Get in Touch</a>
+        <a href="#about" class="btn-outline">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-frame">
+        <div class="photo-placeholder">
+         <div class="photo-placeholder">
+  <img src="images/profile.jpg" alt="Mrinmay Mallik">
+</div>
+          
+        </div>
+        <div class="hero-photo-label">Krishibid ✦</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─── -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-image-stack reveal">
+        <div class="about-main-img">
+         <div class="photo-placeholder">
+  <img src="images/about.jpg" alt="Mrinmay Mallik">
+</div>
+          
+        </div>
+        <div class="about-accent-card">
+          <div class="accent-card-num">4+</div>
+          <div class="accent-card-text">Years of Agricultural<br/>Experience</div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="section-label reveal">Who I Am</p>
+        <h2 class="section-title reveal reveal-delay-1">Cultivating Knowledge,<br/>Growing Possibilities</h2>
+        <div class="section-divider reveal reveal-delay-2"></div>
+        <p class="reveal reveal-delay-2">I am <strong>Mrinmay Mallik</strong>, a qualified <em>Krishibid</em> (Agricultural Specialist) with a deep-rooted passion for sustainable agriculture and rural development. My work spans crop science, soil health, and modern agri-practices that empower farmers and communities.</p>
+        <p class="reveal reveal-delay-3">Alongside my agricultural career, I work as a freelancer — offering services in content writing, research, agricultural consultancy, and digital projects. I believe in the power of knowledge-sharing to transform livelihoods.</p>
+        <div class="about-highlights reveal">
+          <div class="highlight-item">
+            <div class="highlight-icon">🎓</div>
+            <div class="highlight-label">Education</div>
+            <div class="highlight-val">B.Sc. in Agriculture</div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">📍</div>
+            <div class="highlight-label">Location</div>
+            <div class="highlight-val">Dhaka,Bangladesh </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">💼</div>
+            <div class="highlight-label">Profession</div>
+            <div class="highlight-val">Krishibid & Freelancer</div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🌐</div>
+            <div class="highlight-label">Languages</div>
+            <div class="highlight-val">Bengali, English</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SKILLS ─── -->
+  <section id="skills">
+    <p class="section-label reveal">Expertise</p>
+    <h2 class="section-title reveal reveal-delay-1">Areas of Proficiency</h2>
+    <div class="section-divider reveal reveal-delay-2"></div>
+    <div class="skills-grid">
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-icon">🌱</div>
+        <div class="skill-name">Crop Science</div>
+        <div class="skill-desc">Expert knowledge in crop physiology, disease management, and high-yield cultivation techniques for diverse agro-climatic zones.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-icon">🌍</div>
+        <div class="skill-name">Soil & Water Management</div>
+        <div class="skill-desc">Proficient in soil health analysis, irrigation planning, and conservation strategies to maximize agricultural productivity sustainably.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-icon">✍️</div>
+        <div class="skill-name">Content Writing</div>
+        <div class="skill-desc">Skilled in writing clear, engaging agricultural content, research articles, and digital copy for web platforms and publications.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-icon">🔬</div>
+        <div class="skill-name">Agri-Research</div>
+        <div class="skill-desc">Experienced in conducting field research, data collection, and analysis related to modern and sustainable agricultural systems.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:88%"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-icon">💡</div>
+        <div class="skill-name">Agri Consulting</div>
+        <div class="skill-desc">Providing tailored guidance to farmers and agri-businesses on best practices, technology adoption, and market linkage.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:82%"></div></div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-icon">💻</div>
+        <div class="skill-name">Freelance Services</div>
+        <div class="skill-desc">Delivering professional freelance work including data entry, research assistance, digital projects, and agri-related consultancy online.</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:78%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PHOTO GALLERY ─── -->
+  <section id="gallery">
+    <p class="section-label reveal">Visual Portfolio</p>
+    <h2 class="section-title reveal reveal-delay-1">Photo Gallery</h2>
+    <div class="section-divider reveal reveal-delay-2"></div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+       <img src="images/field-work.jpg" alt="Field Work">
+        <div class="gallery-overlay">Field Research & Crop Monitoring</div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-1">
+       <img src="images/lab-work.jpg" alt="Field Work">
+        <div class="gallery-overlay">Soil Analysis Lab</div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-2">
+        <img src="images/farmer-consultation.jpg" alt="Field Work">
+        <div class="gallery-overlay">Farmer Consultation</div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-1">
+        <img src="images/plant-health-assessment.jpg" alt="Field Work">
+        <div class="gallery-overlay">Plant Health Assessment</div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-2">
+        <img src="images/agricultural-research.jpg" alt="Field Work">
+        <div class="gallery-overlay">Agricultural Research</div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-2">
+        <img src="images/agricultural.jpg" alt="Field Work">
+        <div class="gallery-overlay">Agricultural </div>
+    </div>
+    
+  </section>
+
+  <!-- ─── SERVICES ─── -->
+  <section id="services">
+    <p class="section-label reveal">What I Offer</p>
+    <h2 class="section-title reveal reveal-delay-1">Services</h2>
+    <div class="section-divider reveal reveal-delay-2"></div>
+    <div class="services-list">
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">01</div>
+        <div class="service-title">Agricultural Consultancy</div>
+        <p class="service-text">End-to-end advisory for crop planning, pest and disease management, fertilizer recommendations, and improving farm productivity.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">02</div>
+        <div class="service-title">Research & Report Writing</div>
+        <p class="service-text">Well-researched agricultural articles, project reports, academic content, and policy briefs tailored to your requirements.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-num">03</div>
+        <div class="service-title">Freelance Digital Projects</div>
+        <p class="service-text">Data entry, transcription, content creation, online research, and other digital freelance tasks delivered with quality and on time.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">04</div>
+        <div class="service-title">Training & Workshops</div>
+        <p class="service-text">Conducting educational sessions for farmers and students on modern farming techniques, sustainable agriculture, and agri-technology.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">05</div>
+        <div class="service-title">Soil & Crop Analysis</div>
+        <p class="service-text">Scientific analysis of soil health, crop nutritional status, and irrigation efficiency to maximize yield and reduce input costs.</p>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-num">06</div>
+        <div class="service-title">Project Development</div>
+        <p class="service-text">Support in preparing agricultural project proposals, feasibility studies, and documentation for NGOs, government bodies, and private firms.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ─── -->
+  <section id="contact">
+    <p class="section-label reveal">Let's Connect</p>
+    <h2 class="section-title reveal reveal-delay-1">Get in Touch</h2>
+    <div class="section-divider reveal reveal-delay-2"></div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p>Whether you need agricultural advice, a freelance collaborator, or just want to connect — I'd love to hear from you. Reach out and let's grow something meaningful together.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <div class="contact-detail-text">mrinmaymallik12@gmail.com</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📞</div>
+          <div class="contact-detail-text">+880 1729638436</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">Madaripur,dhaka,Bangladesh (Available Remotely)</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">💼</div>
+          <div class="contact-detail-text">Available for Freelance Projects</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="fname" placeholder="M Mallik" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="femail" placeholder="mr@example.com" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="fsubject" placeholder="How can I help you?" />
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="fmessage" placeholder="Write your message here..."></textarea>
+          </div>
+          <button class="btn-primary" onclick="submitForm()" style="width:100%; justify-content:center;">Send Message ✦</button>
+          <p id="form-status"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-brand">M.<span>Mallik</span> Portfolio</div>
+    <p class="footer-text">© 2026 Mrinmay Mallik. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Email">✉</a>
+    </div>
+  </footer>
+
+  <!-- Scroll to top button -->
+  <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <script>
+    // ─── NAV SCROLL EFFECT ───
+    const navbar = document.getElementById('navbar');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+      scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+    });
+
+    // ─── HAMBURGER MENU ───
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // ─── SCROLL REVEAL ───
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ─── SKILL BAR ANIMATION ───
+    const skillBars = document.querySelectorAll('.skill-bar');
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const bar = e.target;
+          const target = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => { bar.style.transition = 'width 1s ease'; bar.style.width = target; }, 200);
+          barObserver.unobserve(bar);
+        }
+      });
+    }, { threshold: 0.5 });
+    skillBars.forEach(b => barObserver.observe(b));
+
+    // ─── CONTACT FORM ───
+    function submitForm() {
+      const name    = document.getElementById('fname').value.trim();
+      const email   = document.getElementById('femail').value.trim();
+      const subject = document.getElementById('fsubject').value.trim();
+      const message = document.getElementById('fmessage').value.trim();
+      const status  = document.getElementById('form-status');
+      if (!name || !email || !message) {
+        status.style.color = '#c9453d';
+        status.textContent = '⚠ Please fill in all required fields.';
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.style.color = '#c9453d';
+        status.textContent = '⚠ Please enter a valid email address.';
+        return;
+      }
+      status.style.color = 'var(--green-mid)';
+      status.textContent = '✓ Thank you! Your message has been sent. I will reply shortly.';
+      document.getElementById('fname').value = '';
+      document.getElementById('femail').value = '';
+      document.getElementById('fsubject').value = '';
+      document.getElementById('fmessage').value = '';
+      setTimeout(() => { status.textContent = ''; }, 5000);
+    }
+
+    // ─── ACTIVE NAV LINK ON SCROLL ───
+    const sections = document.querySelectorAll('section[id]');
+    const navAnchors = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+      });
+      navAnchors.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green-deep)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
